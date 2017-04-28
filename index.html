@@ -13,7 +13,28 @@
   </body>
 
   <script>
-    // You can also require other files to run in this process
     require('./renderer.js')
+    var obj = {};
+    var sp = require('serialport');
+    sp.list(function(err, ports) {
+      console.log(ports);
+      obj["port_name"] = ports[1].comName;
+      PrintSerialValue();
+    });
+
+    function PrintSerialValue(){
+      var SerialPort = require('serialport');
+      var port = new SerialPort(obj.port_name);
+
+      port.on('open', function() {
+        port.write('main screen turn on', function(err) {
+          if (err) {
+            return console.log('Error on write: ', err.message);
+          }
+          console.log('message written');
+          console.log(port);
+        });
+      });
+    }
   </script>
 </html>
